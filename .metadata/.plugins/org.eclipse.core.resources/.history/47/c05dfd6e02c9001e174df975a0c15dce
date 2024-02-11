@@ -1,0 +1,50 @@
+package com.example.demo.model;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.Builder;
+import java.util.UUID;
+import java.util.List;
+import java.util.ArrayList;
+import java.time.LocalDateTime;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.CreationTimestamp;
+import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
+
+@Getter
+@Setter
+@Entity
+public class User {
+
+	@Id
+	@GeneratedValue(generator="userUuidGenerator")
+	@GenericGenerator(name="userUuidGenerator",strategy ="uuid2")
+	@Column(columnDefinition = "CHAR(36)")
+	private UUID id;
+	
+	@Column(length=20)
+	private String userId;
+	
+	@Column(length=10)
+	private String username;
+	
+	@Column(length=20)
+	private String password;
+
+	@OneToMany(mappedBy="user",cascade=CascadeType.REMOVE)
+	private List<Question> questions = new ArrayList<>();
+	
+	@CreationTimestamp
+	private LocalDateTime createDate;
+	
+	@Builder
+	public User(String username, String userId, String password) {
+		this.username = username;
+	
+	}
+	
+}
